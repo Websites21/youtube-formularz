@@ -7,6 +7,13 @@ export enum Sex {
   Other = 'inne',
 }
 
+export type PhotoTypeEnum = 'front' | 'side' | 'back';
+export const PhotoType = v.union([
+  v.literal('front'),
+  v.literal('side'),
+  v.literal('back'),
+]);
+
 export const ImageSchema = v.pipe(
   v.file('Proszę wybrać plik ze zdjęciem.'),
   v.mimeType(
@@ -16,7 +23,13 @@ export const ImageSchema = v.pipe(
   v.maxSize(1024 * 1000 * 5, 'Obraz może zawierać maksymalnie 5 MB.')
 );
 
+export type Photo = {
+  type: PhotoTypeEnum;
+  file: File;
+};
+
 export const PhotoSchema = v.object({
+  type: PhotoType,
   file: ImageSchema,
 });
 
@@ -32,5 +45,18 @@ export const WywiadSchema = v.object({
     v.enum(Sex, 'Proszę wybrać płeć.'),
     v.custom((value) => value !== Sex.Empty, 'Proszę wybrać płeć.')
   ),
-  photos: v.pipe(PhotosSchema, v.length(3, 'Wymagane są 3 zdjęcia.')),
+  photos: v.pipe(
+    PhotosSchema,
+    v.minLength(3, 'Wymagane są co najmniej 3 zdjęcia.'),
+    v.maxLength(3, 'Można dodać maksymalnie 3 zdjęcia.'),
+    v.custom((photos: unknown) => {
+      const photoArray = photos as Photo[];
+      const types = photoArray.map((p) => p.type);
+      return (
+        types.includes('front') &&
+        types.includes('side') &&
+        types.includes('back')
+      );
+    }, 'Wymagane są zdjęcia z przodu, boku i tyłu.')
+  ),
 });

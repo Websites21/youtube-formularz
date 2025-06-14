@@ -11,11 +11,12 @@ import { Label } from './label';
 import { Button } from './button';
 import { cn } from '@/lib/utils';
 import Select from './select';
+import { Photo } from '@/lib/valibot';
 
 const defaultValues = {
   name: '',
   sex: Sex.Empty,
-  photos: [] as File[],
+  photos: [] as Photo[],
 };
 
 type FormFields = keyof typeof defaultValues;
@@ -178,7 +179,7 @@ export function Form() {
             >
               {(field) => (
                 <>
-                  <div className='grid grid-cols-3 gap-4 mb-4'>
+                  <div className='grid grid-cols-3'>
                     {(['front', 'side', 'back'] as const).map((type) => (
                       <div key={type} className='flex flex-col gap-2'>
                         <Label
@@ -192,16 +193,16 @@ export function Form() {
                             ? 'z boku'
                             : 'z tyłu'}
                         </Label>
-                        <input
+                        <Input
                           type='file'
-                          accept='image/jpeg, image/png, image/jpg, image/webp'
+                          accept='image/jpeg, image/png, image/webp'
                           id={`${type}_photo`}
                           name={`${type}_photo`}
                           onChange={async (e) => {
                             const file = e.target.files?.[0];
                             const currentPhotos = field.state.value || [];
                             const newPhotos = currentPhotos.filter(
-                              (p: File) => p.type !== type
+                              (p: Photo) => p.type !== type
                             );
                             if (file) {
                               newPhotos.push({ type, file });
@@ -209,29 +210,26 @@ export function Form() {
                             field.handleChange(newPhotos);
                           }}
                           className={cn(
-                            'block w-full text-sm text-neutral-950 file:mr-4 file:py-2 file:px-4',
-                            'file:rounded-full file:border-0 file:text-sm file:font-semibold',
+                            'text-sm text-neutral-950 file:mr-4 file:py-2 file:px-4',
+                            'file:rounded-full file:text-sm',
                             'file:bg-neutral-950 file:text-white',
                             field.state.meta.errors.length > 0 && 'text-red-700'
                           )}
                         />
                         {field.state.value?.find(
-                          (p: File) => p.type === type
+                          (p: Photo) => p.type === type
                         ) && (
-                          <div className='text-sm text-green-700'>
-                            Zdjęcie dodane
-                          </div>
+                          <Message message='Zdjęcie dodane' type='success' />
                         )}
                       </div>
                     ))}
                   </div>
-                  {field.state.meta.errors &&
-                    field.state.meta.errors.length > 0 && (
-                      <Message
-                        message={field.state.meta.errors[0]?.message}
-                        type='error'
-                      />
-                    )}
+                  {field.state.meta.errors && (
+                    <Message
+                      message={field.state.meta.errors[0]?.message}
+                      type='error'
+                    />
+                  )}
                 </>
               )}
             </form.Field>
