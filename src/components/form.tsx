@@ -14,6 +14,9 @@ import Select from './select';
 
 const defaultValues = {
   name: '',
+  age: '',
+  height: '',
+  weight: '',
   sex: Sex.Empty,
   number: '',
   goal: '',
@@ -24,9 +27,7 @@ type FormFields = keyof typeof defaultValues;
 const questionFieldMap: Record<string, Record<string, FormFields>> = {
   '1': {
     '1': 'name',
-    '5': 'sex',
-    '6': 'number',
-    '7': 'goal',
+    '2': 'sex',
   },
 };
 
@@ -38,6 +39,40 @@ export function Form() {
     defaultValues,
     onSubmit: async ({}) => {},
   });
+
+  const handlePreviousQuestion = () => {
+    const currentFieldKey =
+      questionFieldMap[currentStep.toString()]?.[currentQuestion.toString()];
+    if (currentFieldKey) {
+      form.resetField(currentFieldKey);
+    }
+
+    if (currentQuestion > 1) {
+      setCurrentQuestion((prev) => prev - 1);
+      return;
+    }
+
+    if (currentStep > 1) {
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+
+      const questions = questionFieldMap[prevStep.toString()] || {};
+      const lastQuestion = Object.keys(questions).length || 1;
+      setCurrentQuestion(lastQuestion);
+    }
+  };
+
+  const handleNextQuestion = async () => {
+    const fieldKey =
+      questionFieldMap[currentStep.toString()]?.[currentQuestion.toString()];
+
+    if (fieldKey) {
+      const errors = await form.validateField(fieldKey, 'submit');
+      if (!errors.length) {
+        setCurrentQuestion((prev) => prev + 1);
+      }
+    }
+  };
 
   return (
     <section className='max-w-7xl mx-auto px-4 sm:px-8 py-32'>
@@ -129,29 +164,26 @@ export function Form() {
               )}
             </form.Field>
           </div>
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-          >
-            {([canSubmit, isSubmitting]) => (
-              <Button
-                type='button'
-                className='mt-10 cursor-pointer ml-auto text-white py-3 px-6 font-bold flex rounded-full bg-neutral-950 gap-2 items-center justify-center'
-                disabled={!canSubmit || isSubmitting}
-                onClick={async () => {
-                  const fieldKey =
-                    questionFieldMap[currentStep.toString()][
-                      currentQuestion.toString()
-                    ];
-
-                  const errors = await form.validateField(fieldKey, 'submit');
-                  console.log(errors);
-                  if (!errors.length) setCurrentQuestion((prev) => prev + 1);
-                }}
-              >
-                Następne pytanie
+          <div className='flex justify-between items-center mt-10'>
+            {(currentQuestion > 1 || currentStep > 1) && (
+              <Button type='button' onClick={handlePreviousQuestion}>
+                Wstecz
               </Button>
             )}
-          </form.Subscribe>
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit, isSubmitting]) => (
+                <Button
+                  type='button'
+                  disabled={!canSubmit || isSubmitting}
+                  onClick={handleNextQuestion}
+                >
+                  Następne pytanie
+                </Button>
+              )}
+            </form.Subscribe>
+          </div>
         </form>
       </div>
     </section>
