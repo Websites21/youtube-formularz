@@ -14,12 +14,7 @@ import Select from './select';
 
 const defaultValues = {
   name: '',
-  age: '',
-  height: '',
-  weight: '',
   sex: Sex.Empty,
-  number: '',
-  goal: '',
 };
 
 type FormFields = keyof typeof defaultValues;
@@ -178,6 +173,7 @@ export function Form() {
                   type='button'
                   disabled={!canSubmit || isSubmitting}
                   onClick={handleNextQuestion}
+                  className='ml-auto'
                 >
                   Następne pytanie
                 </Button>
