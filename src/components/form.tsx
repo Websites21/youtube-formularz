@@ -197,37 +197,34 @@ export function Form() {
             >
               {(field) => (
                 <>
-                  <div className='grid grid-cols-3 gap-4 mb-4'>
-                    {(['front', 'side', 'back'] as const).map((type) => {
-                      const photoExists = field.state.value?.some(
-                        (p: Photo) => p.type === type
-                      );
-                      const hasError =
-                        field.state.meta.errors?.length > 0 && !photoExists;
-
-                      return (
-                        <div key={type} className='flex flex-col gap-2'>
-                          <Label htmlFor={`${type}_photo`} hasError={hasError}>
-                            Zdjęcie{' '}
-                            {type === 'front'
-                              ? 'z przodu'
-                              : type === 'side'
-                              ? 'z boku'
-                              : 'z tyłu'}
-                          </Label>
-                          <FileInput
-                            accept='image/jpeg, image/png, image/webp'
-                            id={`${type}_photo`}
-                            name={`${type}_photo`}
-                            hasError={hasError}
-                            onChange={handleFileChange(field, type)}
-                          />
-                          {photoExists && (
-                            <Message message='Zdjęcie dodane' type='success' />
-                          )}
-                        </div>
-                      );
-                    })}
+                  <div className='grid grid-cols-3'>
+                    {(['front', 'side', 'back'] as const).map((type) => (
+                      <div key={type} className='flex flex-col gap-2'>
+                        <Label
+                          htmlFor={`${type}_photo`}
+                          hasError={field.state.meta.errors.length > 0}
+                        >
+                          Zdjęcie{' '}
+                          {type === 'front'
+                            ? 'z przodu'
+                            : type === 'side'
+                            ? 'z boku'
+                            : 'z tyłu'}
+                        </Label>
+                        <FileInput
+                          accept='image/jpeg, image/png, image/webp'
+                          id={`${type}_photo`}
+                          name={`${type}_photo`}
+                          hasError={field.state.meta.errors.length > 0}
+                          onChange={handleFileChange(field, type)}
+                        />
+                        {field.state.value?.find(
+                          (p: Photo) => p.type === type
+                        ) && (
+                          <Message message='Zdjęcie dodane' type='success' />
+                        )}
+                      </div>
+                    ))}
                   </div>
                   {field.state.meta.errors && (
                     <Message
