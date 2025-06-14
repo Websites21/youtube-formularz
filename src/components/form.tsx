@@ -15,6 +15,7 @@ import Select from './select';
 const defaultValues = {
   name: '',
   sex: Sex.Empty,
+  photos: [] as File[],
 };
 
 type FormFields = keyof typeof defaultValues;
@@ -23,6 +24,7 @@ const questionFieldMap: Record<string, Record<string, FormFields>> = {
   '1': {
     '1': 'name',
     '2': 'sex',
+    '3': 'photos',
   },
 };
 
@@ -155,6 +157,81 @@ export function Form() {
                     message={field.state.meta.errors[0]?.message}
                     type='error'
                   />
+                </>
+              )}
+            </form.Field>
+          </div>
+          <div
+            className={cn(
+              'hidden',
+              currentStep === 1 && currentQuestion === 3 && 'block'
+            )}
+          >
+            <h2 className='text-3xl text-neutral-950 font-bold mb-4'>
+              Zdjęcia
+            </h2>
+            <form.Field
+              name='photos'
+              validators={{
+                onSubmit: WywiadSchema.entries.photos,
+              }}
+            >
+              {(field) => (
+                <>
+                  <div className='grid grid-cols-3 gap-4 mb-4'>
+                    {(['front', 'side', 'back'] as const).map((type) => (
+                      <div key={type} className='flex flex-col gap-2'>
+                        <Label
+                          htmlFor={`${type}_photo`}
+                          hasError={field.state.meta.errors.length > 0}
+                        >
+                          Zdjęcie{' '}
+                          {type === 'front'
+                            ? 'z przodu'
+                            : type === 'side'
+                            ? 'z boku'
+                            : 'z tyłu'}
+                        </Label>
+                        <input
+                          type='file'
+                          accept='image/jpeg, image/png, image/jpg, image/webp'
+                          id={`${type}_photo`}
+                          name={`${type}_photo`}
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            const currentPhotos = field.state.value || [];
+                            const newPhotos = currentPhotos.filter(
+                              (p: File) => p.type !== type
+                            );
+                            if (file) {
+                              newPhotos.push({ type, file });
+                            }
+                            field.handleChange(newPhotos);
+                          }}
+                          className={cn(
+                            'block w-full text-sm text-neutral-950 file:mr-4 file:py-2 file:px-4',
+                            'file:rounded-full file:border-0 file:text-sm file:font-semibold',
+                            'file:bg-neutral-950 file:text-white',
+                            field.state.meta.errors.length > 0 && 'text-red-700'
+                          )}
+                        />
+                        {field.state.value?.find(
+                          (p: File) => p.type === type
+                        ) && (
+                          <div className='text-sm text-green-700'>
+                            Zdjęcie dodane
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {field.state.meta.errors &&
+                    field.state.meta.errors.length > 0 && (
+                      <Message
+                        message={field.state.meta.errors[0]?.message}
+                        type='error'
+                      />
+                    )}
                 </>
               )}
             </form.Field>
