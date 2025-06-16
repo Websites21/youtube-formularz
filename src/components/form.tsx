@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { compressImage } from '@/lib/utils';
 import { wywiadAction } from '@/lib/actions';
 import { formularz } from './sonner';
+import { Loading } from './icons';
 
 const defaultValues = {
   name: '',
@@ -135,6 +136,9 @@ export function Form() {
             });
           } else {
             await form.handleSubmit();
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
           }
         } else if (isLastQuestionInStep) {
           setCurrentStep((prev) => prev + 1);
@@ -377,9 +381,13 @@ export function Form() {
                   onClick={handleNextQuestion}
                   className='ml-auto'
                 >
-                  {isLastQuestionInStep && isLastStep
-                    ? 'Wyślij formularz'
-                    : 'Następne pytanie'}
+                  {isSubmitting ? (
+                    <Loading className='size-5 stroke-2 stroke-black animate-spin' />
+                  ) : isLastQuestionInStep && isLastStep ? (
+                    'Wyślij formularz'
+                  ) : (
+                    'Następne pytanie'
+                  )}
                 </Button>
               )}
             </form.Subscribe>
