@@ -47,9 +47,8 @@ export const WywiadSchema = v.object({
   ),
   photos: v.pipe(
     PhotosSchema,
-    v.minLength(3, 'Wymagane są co najmniej 3 zdjęcia.'),
-    v.maxLength(3, 'Można dodać maksymalnie 3 zdjęcia.'),
-    v.custom((photos: unknown) => {
+    v.length(3, 'Wymagane są 3 zdjęcia.'),
+    v.custom((photos) => {
       const photoArray = photos as Photo[];
       const types = photoArray.map((p) => p.type);
       return (

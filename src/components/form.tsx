@@ -57,12 +57,6 @@ export function Form() {
   });
 
   const handlePreviousQuestion = () => {
-    const currentFieldKey =
-      questionFieldMap[currentStep.toString()]?.[currentQuestion.toString()];
-    if (currentFieldKey) {
-      form.resetField(currentFieldKey);
-    }
-
     if (currentQuestion > 1) {
       setCurrentQuestion((prev) => prev - 1);
       return;
@@ -197,9 +191,9 @@ export function Form() {
             >
               {(field) => (
                 <>
-                  <div className='grid grid-cols-3'>
+                  <div className='grid grid-cols-3 gap-4'>
                     {(['front', 'side', 'back'] as const).map((type) => (
-                      <div key={type} className='flex flex-col gap-2'>
+                      <div key={type} className='flex flex-col'>
                         <Label
                           htmlFor={`${type}_photo`}
                           hasError={field.state.meta.errors.length > 0}
