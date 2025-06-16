@@ -26,7 +26,7 @@ export function Steps({
   setCurrentQuestion,
 }: StepsProps) {
   return (
-    <div className='flex flex-col items-end gap-10'>
+    <div className='flex flex-col items-center md:items-end gap-10'>
       {steps.map((step) => (
         <Step
           key={step.title}

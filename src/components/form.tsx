@@ -117,7 +117,7 @@ export function Form() {
               currentStep === 1 && currentQuestion === 1 && 'block'
             )}
           >
-            <h2 className='text-3xl text-white font-bold mb-4'>
+            <h2 className='text-center md:text-left text-3xl text-white font-bold mb-4'>
               Jak się nazywasz?
             </h2>
             <form.Field
@@ -156,7 +156,7 @@ export function Form() {
               currentStep === 1 && currentQuestion === 2 && 'block'
             )}
           >
-            <h2 className='text-3xl text-white font-bold mb-4'>
+            <h2 className='text-center md:text-left text-3xl text-white font-bold mb-4'>
               Chciałbym Cię lepiej poznać
             </h2>
             <form.Field
@@ -194,7 +194,7 @@ export function Form() {
               currentStep === 1 && currentQuestion === 3 && 'block'
             )}
           >
-            <h2 className='text-3xl text-white font-bold mb-4'>
+            <h2 className='text-center md:text-left text-3xl text-white font-bold mb-4'>
               Wybierz poziom zaangażowania
             </h2>
             <form.Field
@@ -240,7 +240,7 @@ export function Form() {
               currentStep === 2 && currentQuestion === 1 && 'block'
             )}
           >
-            <h2 className='text-3xl text-white font-bold mb-4'>
+            <h2 className='text-center md:text-left text-3xl text-white font-bold mb-4'>
               Zdjęcia sylwetki
             </h2>
             <form.Field
@@ -251,7 +251,7 @@ export function Form() {
             >
               {(field) => (
                 <>
-                  <div className='grid grid-cols-3 gap-4'>
+                  <div className='grid md:grid-cols-3 gap-4'>
                     {(['front', 'side', 'back'] as const).map((type) => (
                       <div key={type} className='flex flex-col'>
                         <Label
