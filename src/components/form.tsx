@@ -4,7 +4,7 @@ import { Steps } from './steps';
 import { useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 import Input from './input';
-import { Sex } from '@/lib/valibot';
+import { Commitment } from '@/lib/valibot';
 import Message from './message';
 import { WywiadSchema, Photo } from '@/lib/valibot';
 import { Label } from './label';
@@ -12,10 +12,12 @@ import { Button } from './button';
 import { cn } from '@/lib/utils';
 import Select from './select';
 import { FileInput } from './file';
+import Textarea from './textarea';
 
 const defaultValues = {
   name: '',
-  sex: Sex.Empty,
+  about: '',
+  commitment: Commitment.Empty,
   photos: [] as Photo[],
 };
 
@@ -24,8 +26,11 @@ type FormFields = keyof typeof defaultValues;
 const questionFieldMap: Record<string, Record<string, FormFields>> = {
   '1': {
     '1': 'name',
-    '2': 'sex',
-    '3': 'photos',
+    '2': 'about',
+    '3': 'commitment',
+  },
+  '2': {
+    '1': 'photos',
   },
 };
 
@@ -73,13 +78,20 @@ export function Form() {
   };
 
   const handleNextQuestion = async () => {
-    const fieldKey =
-      questionFieldMap[currentStep.toString()]?.[currentQuestion.toString()];
+    const currentStepQuestions = questionFieldMap[currentStep.toString()];
+    const isLastQuestionInStep =
+      currentQuestion === Object.keys(currentStepQuestions).length;
+    const fieldToValidate = currentStepQuestions[currentQuestion.toString()];
 
-    if (fieldKey) {
-      const errors = await form.validateField(fieldKey, 'submit');
+    if (fieldToValidate) {
+      const errors = await form.validateField(fieldToValidate, 'submit');
       if (!errors.length) {
-        setCurrentQuestion((prev) => prev + 1);
+        if (isLastQuestionInStep) {
+          setCurrentStep((prev) => prev + 1);
+          setCurrentQuestion(1);
+        } else {
+          setCurrentQuestion((prev) => prev + 1);
+        }
       }
     }
   };
@@ -99,7 +111,7 @@ export function Form() {
               currentStep === 1 && currentQuestion === 1 && 'block'
             )}
           >
-            <h2 className='text-3xl text-neutral-950 font-bold mb-4'>
+            <h2 className='text-3xl text-white font-bold mb-4'>
               Jak się nazywasz?
             </h2>
             <form.Field
@@ -138,34 +150,30 @@ export function Form() {
               currentStep === 1 && currentQuestion === 2 && 'block'
             )}
           >
-            <h2 className='text-3xl text-neutral-950 font-bold mb-4'>
-              Twoja płeć
+            <h2 className='text-3xl text-white font-bold mb-4'>
+              Chciałbym Cię lepiej poznać
             </h2>
             <form.Field
-              name='sex'
+              name='about'
               validators={{
-                onSubmit: WywiadSchema.entries.sex,
+                onSubmit: WywiadSchema.entries.about,
               }}
             >
               {(field) => (
                 <>
                   <Label
-                    htmlFor='sex'
+                    htmlFor='about'
                     hasError={field.state.meta.errors.length > 0}
                   >
-                    Płeć
+                    Kilka słów o sobie
                   </Label>
-                  <Select
-                    id='sex'
+                  <Textarea
+                    id='about'
+                    placeholder='Twoja odpowiedź'
                     value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value as Sex)}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     hasError={field.state.meta.errors.length > 0}
-                  >
-                    <option value={Sex.Empty}>Wybierz płeć</option>
-                    <option value={Sex.Male}>Mężczyzna</option>
-                    <option value={Sex.Female}>Kobieta</option>
-                    <option value={Sex.Other}>Inne</option>
-                  </Select>
+                  />
                   <Message
                     message={field.state.meta.errors[0]?.message}
                     type='error'
@@ -180,9 +188,53 @@ export function Form() {
               currentStep === 1 && currentQuestion === 3 && 'block'
             )}
           >
-            <h2 className='text-3xl text-neutral-950 font-bold mb-4'>
-              Zdjęcia
+            <h2 className='text-3xl text-white font-bold mb-4'>
+              Twoje zaangażowanie
             </h2>
+            <form.Field
+              name='commitment'
+              validators={{
+                onSubmit: WywiadSchema.entries.commitment,
+              }}
+            >
+              {(field) => (
+                <>
+                  <Label
+                    htmlFor='commitment'
+                    hasError={field.state.meta.errors.length > 0}
+                  >
+                    Twoje zaangażowanie
+                  </Label>
+                  <Select
+                    id='commitment'
+                    value={field.state.value}
+                    onChange={(e) =>
+                      field.handleChange(e.target.value as Commitment)
+                    }
+                    hasError={field.state.meta.errors.length > 0}
+                  >
+                    <option value={Commitment.Empty}>
+                      Wybierz poziom zaangażowania
+                    </option>
+                    <option value={Commitment.Low}>Niski</option>
+                    <option value={Commitment.Medium}>Średni</option>
+                    <option value={Commitment.High}>Wysoki</option>
+                  </Select>
+                  <Message
+                    message={field.state.meta.errors[0]?.message}
+                    type='error'
+                  />
+                </>
+              )}
+            </form.Field>
+          </div>
+          <div
+            className={cn(
+              'hidden',
+              currentStep === 2 && currentQuestion === 1 && 'block'
+            )}
+          >
+            <h2 className='text-3xl text-white font-bold mb-4'>Zdjęcia</h2>
             <form.Field
               name='photos'
               validators={{

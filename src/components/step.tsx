@@ -20,14 +20,13 @@ export function Step({
   setCurrentQuestion,
 }: StepProps) {
   const isCompleted = currentStep > step;
-  const isActiveOrCompleted = isActive || isCompleted;
   const isAccessible = step === currentStep || isCompleted;
 
   return (
     <button
       className={cn(
-        'flex cursor-pointer gap-4 items-center',
-        !isAccessible && 'cursor-not-allowed'
+        'flex cursor-pointer gap-4 items-center text-white transition-all duration-300',
+        !isAccessible && 'cursor-not-allowed opacity-50'
       )}
       onClick={() => {
         if (isAccessible) {
@@ -37,28 +36,13 @@ export function Step({
       }}
     >
       <span className='text-right flex flex-col gap-0.5'>
-        <span
-          className={cn(
-            'text-neutral-950 font-semibold',
-            isActiveOrCompleted && 'text-neutral-950'
-          )}
-        >
-          {title}
-        </span>
-        <span
-          className={cn(
-            'text-sm text-neutral-950',
-            isActiveOrCompleted && 'text-neutral-950'
-          )}
-        >
-          Krok {step}
-        </span>
+        <span className='font-semibold'>{title}</span>
+        <span className='text-sm'>Krok {step}</span>
       </span>
       <span
         className={cn(
-          'rounded-full p-3',
-          !isActiveOrCompleted && 'bg-neutral-950 stroke-neutral-50',
-          (isActive || isCompleted) && 'bg-green-200 stroke-neutral-950'
+          'rounded-full p-3 transition-all duration-300 bg-white stroke-black',
+          (isActive || isCompleted) && 'bg-green-200'
         )}
       >
         {icon}

@@ -14,8 +14,8 @@ export default function Message({ message, type }: MessageProps) {
     <p
       className={cn(
         'text-sm mt-3',
-        type === 'error' && 'text-red-700',
-        type === 'success' && 'text-green-700'
+        type === 'error' && 'text-red-400',
+        type === 'success' && 'text-green-400'
       )}
     >
       {message}

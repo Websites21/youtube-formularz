@@ -10,8 +10,8 @@ export function Label({ children, hasError = false, ...props }: LabelProps) {
     <label
       {...props}
       className={cn(
-        'font-medium text-sm text-neutral-950 mb-3 inline-block',
-        hasError && 'text-red-700'
+        'font-medium text-sm text-white mb-3 inline-block',
+        hasError && 'text-red-400'
       )}
     >
       {children}

@@ -1,10 +1,10 @@
 import * as v from 'valibot';
 
-export enum Sex {
+export enum Commitment {
   Empty = '',
-  Male = 'mężczyzna',
-  Female = 'kobieta',
-  Other = 'inne',
+  Low = 'niski',
+  Medium = 'średni',
+  High = 'wysoki',
 }
 
 export type PhotoTypeEnum = 'front' | 'side' | 'back';
@@ -41,9 +41,17 @@ export const WywiadSchema = v.object({
     v.nonEmpty('Proszę wprowadzić imię i nazwisko.'),
     v.maxLength(50, 'Imię i nazwisko może zawierać co najwyżej 50 znaków.')
   ),
-  sex: v.pipe(
-    v.enum(Sex, 'Proszę wybrać płeć.'),
-    v.custom((value) => value !== Sex.Empty, 'Proszę wybrać płeć.')
+  about: v.pipe(
+    v.string('Opis musi być stringiem.'),
+    v.nonEmpty('Proszę wprowadzić opis.'),
+    v.maxLength(1000, 'Opis może zawierać co najwyżej 1000 znaków.')
+  ),
+  commitment: v.pipe(
+    v.enum(Commitment, 'Proszę wybrać poziom zaangażowania.'),
+    v.custom(
+      (value) => value !== Commitment.Empty,
+      'Proszę wybrać poziom zaangażowania.'
+    )
   ),
   photos: v.pipe(
     PhotosSchema,

@@ -12,10 +12,10 @@ export function FileInput({ hasError = false, ...props }: FileInputProps) {
       type='file'
       {...props}
       className={cn(
-        'text-sm text-neutral-950 file:mr-4 file:py-2 file:px-4',
+        'text-sm text-white file:mr-4 file:py-2 file:px-4',
         'file:rounded-full file:text-sm',
-        'file:bg-neutral-950 file:text-white',
-        hasError && 'text-red-700 file:text-red-700 file:bg-red-700/25'
+        'file:bg-white file:text-black',
+        hasError && 'text-red-400 file:text-red-400 file:bg-red-400/25'
       )}
     />
   );

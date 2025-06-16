@@ -17,8 +17,8 @@ export default function Select({
     <select
       {...props}
       className={cn(
-        'w-full text-neutral-950 shadow-border-black rounded-full pl-5 py-4 appearance-none',
-        hasError && 'shadow-border-red bg-red-700/25 text-red-700'
+        'w-full text-black bg-white rounded-full pl-5 py-4 appearance-none',
+        hasError && 'shadow-border-red bg-red-400/25 text-red-400'
       )}
     >
       {children}

@@ -11,8 +11,8 @@ export default function Input({ hasError = false, ...props }: InputProps) {
     <input
       {...props}
       className={cn(
-        'w-full text-neutral-950 shadow-border-black rounded-full pl-5 py-4 placeholder:text-neutral-600',
-        hasError && 'shadow-border-red bg-red-700/25 placeholder:text-red-700'
+        'w-full bg-white text-black rounded-full pl-5 py-4 placeholder:text-neutral-500',
+        hasError && 'shadow-border-red bg-red-400/25 placeholder:text-red-400'
       )}
     />
   );

@@ -1,4 +1,4 @@
-import { PaperClip, Book, Camera, Lightning, User } from './icons';
+import { Camera, User } from './icons';
 import { Step } from './step';
 
 const steps = [
@@ -8,24 +8,9 @@ const steps = [
     icon: <User className='size-7 stroke-2' />,
   },
   {
-    title: 'Obecne nawyki',
-    step: 2,
-    icon: <Lightning className='size-7 stroke-2' />,
-  },
-  {
-    title: 'Szczegóły',
-    step: 3,
-    icon: <Book className='size-7 stroke-2' />,
-  },
-  {
     title: 'Zdjęcia i pomiary',
-    step: 4,
+    step: 2,
     icon: <Camera className='size-7 stroke-2' />,
-  },
-  {
-    title: 'Pliki',
-    step: 5,
-    icon: <PaperClip className='size-7 stroke-2' />,
   },
 ];
 
