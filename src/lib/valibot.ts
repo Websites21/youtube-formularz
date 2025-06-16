@@ -67,3 +67,5 @@ export const WywiadSchema = v.object({
     }, 'Wymagane są zdjęcia z przodu, boku i tyłu.')
   ),
 });
+
+export type WywiadSchema = v.InferOutput<typeof WywiadSchema>;

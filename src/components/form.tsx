@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import Select from './select';
 import { FileInput } from './file';
 import Textarea from './textarea';
+import { ProgressIndicator } from './progress-indicator';
 
 const defaultValues = {
   name: '',
@@ -37,6 +38,7 @@ const questionFieldMap: Record<string, Record<string, FormFields>> = {
 export function Form() {
   const [currentStep, setCurrentStep] = useState(1);
   const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleFileChange =
     (
@@ -99,11 +101,14 @@ export function Form() {
   return (
     <section className='max-w-7xl mx-auto px-4 sm:px-8 py-32'>
       <div className='grid grid-cols-[auto_1fr] gap-10'>
-        <Steps
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
-          setCurrentQuestion={setCurrentQuestion}
-        />
+        <div className='relative self-start'>
+          <Steps
+            currentStep={currentStep}
+            setCurrentStep={setCurrentStep}
+            setCurrentQuestion={setCurrentQuestion}
+          />
+          <ProgressIndicator currentStep={currentStep} totalSteps={2} />
+        </div>
         <form>
           <div
             className={cn(
@@ -189,7 +194,7 @@ export function Form() {
             )}
           >
             <h2 className='text-3xl text-white font-bold mb-4'>
-              Twoje zaangażowanie
+              Wybierz poziom zaangażowania
             </h2>
             <form.Field
               name='commitment'
@@ -214,7 +219,7 @@ export function Form() {
                     hasError={field.state.meta.errors.length > 0}
                   >
                     <option value={Commitment.Empty}>
-                      Wybierz poziom zaangażowania
+                      Poziom zaangażowania
                     </option>
                     <option value={Commitment.Low}>Niski</option>
                     <option value={Commitment.Medium}>Średni</option>

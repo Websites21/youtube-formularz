@@ -25,8 +25,8 @@ export function Step({
   return (
     <button
       className={cn(
-        'flex cursor-pointer gap-4 items-center text-white transition-all duration-300',
-        !isAccessible && 'cursor-not-allowed opacity-50'
+        'flex cursor-pointer gap-4 items-center text-white',
+        !isAccessible && 'cursor-not-allowed'
       )}
       onClick={() => {
         if (isAccessible) {
@@ -41,7 +41,7 @@ export function Step({
       </span>
       <span
         className={cn(
-          'rounded-full p-3 transition-all duration-300 bg-white stroke-black',
+          'rounded-full p-3 bg-white stroke-black transition-all duration-300 delay-300',
           (isActive || isCompleted) && 'bg-green-200'
         )}
       >
