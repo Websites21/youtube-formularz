@@ -14,6 +14,8 @@ import Select from './select';
 import { FileInput } from './file';
 import Textarea from './textarea';
 import { ProgressIndicator } from './progress-indicator';
+import Link from 'next/link';
+import { Checkbox } from './checkbox';
 
 const defaultValues = {
   name: '',
@@ -239,7 +241,9 @@ export function Form() {
               currentStep === 2 && currentQuestion === 1 && 'block'
             )}
           >
-            <h2 className='text-3xl text-white font-bold mb-4'>Zdjęcia</h2>
+            <h2 className='text-3xl text-white font-bold mb-4'>
+              Zdjęcia sylwetki
+            </h2>
             <form.Field
               name='photos'
               validators={{
@@ -256,11 +260,13 @@ export function Form() {
                           hasError={field.state.meta.errors.length > 0}
                         >
                           Zdjęcie{' '}
-                          {type === 'front'
-                            ? 'z przodu'
-                            : type === 'side'
-                            ? 'z boku'
-                            : 'z tyłu'}
+                          {
+                            {
+                              front: 'z przodu',
+                              side: 'z boku',
+                              back: 'z tyłu',
+                            }[type]
+                          }
                         </Label>
                         <FileInput
                           accept='image/jpeg, image/png, image/webp'
@@ -286,6 +292,26 @@ export function Form() {
                 </>
               )}
             </form.Field>
+            <div className='flex items-start gap-2 col-span-2'>
+              <Checkbox
+                id='privacy'
+                checked={privacyAccepted}
+                onChange={(e) => setPrivacyAccepted(e.target.checked)}
+              />
+              <Label htmlFor='privacy'>
+                Akceptuję{' '}
+                <Link
+                  href='/'
+                  target='_blank'
+                  className='text-green-200 hover:text-green-300 underline transition-all duration-300'
+                >
+                  politykę prywatności
+                </Link>
+                . Twoje zdjęcia i dokumenty z ankiety nie będą udostępniane bez
+                Twojej zgody. Służą jedynie do opracowania strategii dopasowanej
+                do naszej współpracy.
+              </Label>
+            </div>
           </div>
           <div className='flex justify-between items-center mt-10'>
             {(currentQuestion > 1 || currentStep > 1) && (

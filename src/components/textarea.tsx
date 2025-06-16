@@ -14,7 +14,7 @@ export default function Textarea({
     <textarea
       {...props}
       className={cn(
-        'w-full bg-white resize-none text-black rounded-3xl pl-5 py-4 placeholder:text-neutral-600',
+        'w-full bg-white resize-none text-black rounded-3xl pl-5 py-4 placeholder:text-black/75',
         hasError && 'shadow-border-red bg-red-400/25 placeholder:text-red-400'
       )}
     />
