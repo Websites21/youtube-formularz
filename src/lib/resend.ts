@@ -9,7 +9,7 @@ export async function sendFormEmail(data: WywiadSchema) {
 
   for (const photo of data.photos) {
     const originalFilename = photo.file.name;
-    const fileExtension = originalFilename.split('.').pop() || 'jpg';
+    const fileExtension = originalFilename.split('.').pop();
     const contentType = photo.file.type;
     const buffer = await photo.file.arrayBuffer();
     attachments.push({
