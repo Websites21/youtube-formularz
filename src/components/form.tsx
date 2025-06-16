@@ -101,7 +101,7 @@ export function Form() {
 
   return (
     <section className='max-w-7xl mx-auto px-4 sm:px-8 py-32'>
-      <div className='grid grid-cols-[auto_1fr] gap-10'>
+      <div className='grid md:grid-cols-[auto_1fr] gap-10'>
         <div className='relative self-start'>
           <Steps
             currentStep={currentStep}
