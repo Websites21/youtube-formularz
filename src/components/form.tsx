@@ -15,7 +15,6 @@ import { FileInput } from './file';
 import Textarea from './textarea';
 import { ProgressIndicator } from './progress-indicator';
 import Link from 'next/link';
-import { Checkbox } from './checkbox';
 
 const defaultValues = {
   name: '',
@@ -292,8 +291,10 @@ export function Form() {
                 </>
               )}
             </form.Field>
-            <div className='flex items-start gap-2 col-span-2'>
-              <Checkbox
+            <div className='flex items-start gap-2 mt-8 max-w-2xl'>
+              <input
+                className='mt-1'
+                type='checkbox'
                 id='privacy'
                 checked={privacyAccepted}
                 onChange={(e) => setPrivacyAccepted(e.target.checked)}
@@ -303,7 +304,7 @@ export function Form() {
                 <Link
                   href='/'
                   target='_blank'
-                  className='text-green-200 hover:text-green-300 underline transition-all duration-300'
+                  className='text-green-200 underline'
                 >
                   politykę prywatności
                 </Link>
