@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Toaster } from 'sonner';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${plusJakartaSans.className} bg-black`}>
         {children}
+        <Toaster position='top-center' />
       </body>
     </html>
   );

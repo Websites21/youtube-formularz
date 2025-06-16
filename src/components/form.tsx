@@ -15,6 +15,9 @@ import { FileInput } from './file';
 import Textarea from './textarea';
 import { ProgressIndicator } from './progress-indicator';
 import Link from 'next/link';
+import { compressImage } from '@/lib/utils';
+import { wywiadAction } from '@/lib/actions';
+import { formularz } from './sonner';
 
 const defaultValues = {
   name: '',
@@ -61,7 +64,38 @@ export function Form() {
 
   const form = useForm({
     defaultValues,
-    onSubmit: async ({}) => {},
+    onSubmit: async ({ value }) => {
+      try {
+        if (value.photos.length > 0) {
+          const compressedPhotos = await Promise.all(
+            value.photos.map(async (photo) => ({
+              type: photo.type,
+              file: await compressImage(photo.file),
+            }))
+          );
+          value.photos = compressedPhotos;
+        }
+
+        const result = await wywiadAction(value);
+
+        if (!result.success) {
+          formularz({
+            title: '❌ Błąd w wysyłaniu formularza!',
+            description: result.message,
+          });
+        } else {
+          formularz({
+            title: '✅ Formularz został wysłany!',
+            description: 'Dziękujemy za wysłanie formularza.',
+          });
+        }
+      } catch (error) {
+        formularz({
+          title: '❌ Błąd w wysyłaniu formularza!',
+          description: 'Wystąpił nieznany błąd.',
+        });
+      }
+    },
   });
 
   const handlePreviousQuestion = () => {
@@ -80,16 +114,29 @@ export function Form() {
     }
   };
 
+  const getCurrentStepQuestions = () =>
+    questionFieldMap[currentStep.toString()];
+  const isLastQuestionInStep =
+    currentQuestion === Object.keys(getCurrentStepQuestions()).length;
+  const isLastStep = currentStep === Object.keys(questionFieldMap).length;
+
   const handleNextQuestion = async () => {
-    const currentStepQuestions = questionFieldMap[currentStep.toString()];
-    const isLastQuestionInStep =
-      currentQuestion === Object.keys(currentStepQuestions).length;
+    const currentStepQuestions = getCurrentStepQuestions();
     const fieldToValidate = currentStepQuestions[currentQuestion.toString()];
 
     if (fieldToValidate) {
       const errors = await form.validateField(fieldToValidate, 'submit');
       if (!errors.length) {
-        if (isLastQuestionInStep) {
+        if (isLastQuestionInStep && isLastStep) {
+          if (!privacyAccepted) {
+            formularz({
+              title: '❌ Błąd w wysyłaniu formularza!',
+              description: 'Musisz zaakceptować politykę prywatności.',
+            });
+          } else {
+            await form.handleSubmit();
+          }
+        } else if (isLastQuestionInStep) {
           setCurrentStep((prev) => prev + 1);
           setCurrentQuestion(1);
         } else {
@@ -330,7 +377,9 @@ export function Form() {
                   onClick={handleNextQuestion}
                   className='ml-auto'
                 >
-                  Następne pytanie
+                  {isLastQuestionInStep && isLastStep
+                    ? 'Wyślij formularz'
+                    : 'Następne pytanie'}
                 </Button>
               )}
             </form.Subscribe>
