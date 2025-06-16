@@ -7,11 +7,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function compressImage(file: File) {
+  const fileType = file.type;
+
   const options = {
     maxSizeMB: 0.6,
     useWebWorker: true,
-    fileType: file.type,
+    fileType: fileType,
   };
 
-  return await imageCompression(file, options);
+  const compressedFile = await imageCompression(file, options);
+
+  return new File([compressedFile], file.name, { type: fileType });
 }

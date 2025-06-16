@@ -25,7 +25,7 @@ export async function sendFormEmail(data: WywiadSchema) {
     subject: 'Wywiad wstępny',
     html: `<p>Imię i nazwisko: ${data.name}</p>
     <p>Opis: ${data.about}</p>
-    <p>Commitment: ${data.commitment}</p>`,
+    <p>Zaangażowanie: ${data.commitment}</p>`,
     attachments,
   });
 }
