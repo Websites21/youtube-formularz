@@ -55,7 +55,7 @@ export function Form() {
     ) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      const currentPhotos = field.state.value || [];
+      const currentPhotos = field.state.value ;
       const newPhotos = currentPhotos.filter((p: Photo) => p.type !== type);
       if (file) {
         newPhotos.push({ type, file });
